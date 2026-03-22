@@ -1524,7 +1524,7 @@ footer {
 
   <!-- Fullscreen background video -->
   <video class="hero-video" autoplay muted loop playsinline preload="auto">
-    <source src="img/background video.mp4" type="video/mp4">
+    <source src="img/background%20video.mp4" type="video/mp4">
   </video>
   <div class="hero-video-overlay" aria-hidden="true"></div>
 
@@ -2481,10 +2481,21 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 (function() {
   const vid = document.querySelector('.hero-video');
   if (!vid) return;
-  const show = () => vid.classList.add('playing');
-  vid.addEventListener('playing', show, { once: true });
-  // Fallback: if already ready (cached), trigger immediately
-  if (vid.readyState >= 3) show();
+  let shown = false;
+  const show = () => {
+    if (shown) return;
+    shown = true;
+    vid.classList.add('playing');
+  };
+  // Show on any of these events — whichever fires first on the device
+  vid.addEventListener('playing',        show, { once: true });
+  vid.addEventListener('canplay',        show, { once: true });
+  vid.addEventListener('canplaythrough', show, { once: true });
+  vid.addEventListener('loadeddata',     show, { once: true });
+  // Hard fallback: if nothing fires after 2.5s, reveal anyway
+  setTimeout(show, 2500);
+  // Already ready (cached)
+  if (vid.readyState >= 2) show();
 })();
 
 // ── HERO VIDEO PARALLAX ──────────────────────────────────────
