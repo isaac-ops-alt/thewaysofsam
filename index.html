@@ -2488,12 +2488,6 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
   tryPlay();
 
-  // Fallback: first touch on page (covers iOS Low Power Mode delay)
-  document.addEventListener('touchstart', function iosTouch() {
-    if (vid.paused) tryPlay();
-    document.removeEventListener('touchstart', iosTouch);
-  }, { once: true, passive: true });
-
   // Fallback: back-forward navigation (iOS restores page from cache paused)
   window.addEventListener('pageshow', () => { if (vid.paused) tryPlay(); });
 })();
