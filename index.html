@@ -367,6 +367,7 @@ h4 { font-size: 20px; }
   display: flex;
   align-items: center;
   overflow: hidden;
+  background: var(--brown-deep);
 }
 .hero-video {
   position: absolute;
@@ -376,6 +377,11 @@ h4 { font-size: 20px; }
   object-fit: cover;
   z-index: 0;
   will-change: transform;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.hero-video.playing {
+  opacity: 1;
 }
 .hero-video-overlay {
   position: absolute;
@@ -1517,7 +1523,7 @@ footer {
 <section id="hero" aria-label="Hero section">
 
   <!-- Fullscreen background video -->
-  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="img/about.jpeg">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
     <source src="img/background video.mp4" type="video/mp4">
   </video>
   <div class="hero-video-overlay" aria-hidden="true"></div>
@@ -2469,6 +2475,16 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     }
     requestAnimationFrame(loop);
   })();
+})();
+
+// ── HERO VIDEO FADE-IN ───────────────────────────────────────
+(function() {
+  const vid = document.querySelector('.hero-video');
+  if (!vid) return;
+  const show = () => vid.classList.add('playing');
+  vid.addEventListener('playing', show, { once: true });
+  // Fallback: if already ready (cached), trigger immediately
+  if (vid.readyState >= 3) show();
 })();
 
 // ── HERO VIDEO PARALLAX ──────────────────────────────────────
