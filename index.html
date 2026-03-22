@@ -1523,7 +1523,7 @@ footer {
 <section id="hero" aria-label="Hero section">
 
   <!-- Fullscreen background video -->
-  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
     <source src="img/background%20video.mp4" type="video/mp4">
   </video>
   <div class="hero-video-overlay" aria-hidden="true"></div>
@@ -2481,25 +2481,38 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 (function() {
   const vid = document.querySelector('.hero-video');
   if (!vid) return;
+
+  // iOS Safari bug: muted HTML attribute is ignored — must set via JS
+  vid.muted = true;
+  vid.setAttribute('muted', '');
+  vid.setAttribute('playsinline', '');
+  vid.setAttribute('webkit-playsinline', '');
+
   let shown = false;
   const show = () => {
     if (shown) return;
     shown = true;
     vid.classList.add('playing');
   };
-  // Force play (required on mobile — HTML autoplay attribute alone isn't enough)
+
   const tryPlay = () => {
+    vid.muted = true; // re-assert before every play attempt
     const p = vid.play();
-    if (p !== undefined) p.catch(() => {});
+    if (p !== undefined) p.then(show).catch(() => {
+      // If autoplay still blocked, show the dark background gracefully
+      show();
+    });
   };
-  vid.addEventListener('canplay', () => { tryPlay(); show(); }, { once: true });
+
+  vid.addEventListener('loadedmetadata', tryPlay, { once: true });
+  vid.addEventListener('canplay',        () => { tryPlay(); show(); }, { once: true });
   vid.addEventListener('playing',        show, { once: true });
-  vid.addEventListener('canplaythrough', show, { once: true });
-  vid.addEventListener('loadeddata', tryPlay, { once: true });
-  // Hard fallback
-  setTimeout(() => { tryPlay(); show(); }, 2500);
-  // Already ready (cached)
-  if (vid.readyState >= 2) { tryPlay(); show(); }
+
+  // Hard fallback for very slow connections
+  setTimeout(() => { tryPlay(); show(); }, 3000);
+
+  // Already buffered (cached visit)
+  if (vid.readyState >= 1) tryPlay();
 })();
 
 // ── HERO VIDEO PARALLAX ──────────────────────────────────────
