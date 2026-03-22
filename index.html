@@ -1380,22 +1380,15 @@ footer {
 }
 .section-label:hover::before, .section-label:hover::after { width: 48px; }
 
-/* Testimonials auto-scroll on mobile */
+/* Testimonials — stacked blocks on mobile */
 @media (max-width: 640px) {
   .testimonials-grid {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 16px;
-    padding-bottom: 16px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
-  .testimonials-grid::-webkit-scrollbar { display: none; }
   .review-card {
-    min-width: 85vw;
-    scroll-snap-align: start;
-    flex-shrink: 0;
+    width: 100%;
   }
 }
 
@@ -1612,7 +1605,7 @@ footer {
         <div class="section-label reveal">About Sam</div>
         <h2 class="reveal">Where Artistry Meets <em>Confidence</em></h2>
         <p class="reveal">The Ways of Sam is a premium makeup and hairstyling brand based in Mansfield, Nottingham. Founded by Sam — a passionate, detail-driven beauty artist — this brand was built on one belief: every client deserves to feel extraordinary.</p>
-        <p class="reveal reveal-d1">From intimate birthday glam sessions to breathtaking bridal transformations, each appointment is a curated experience. Sam brings not just skill and professionalism, but warmth and genuine care to every client she works with.</p>
+        <p class="reveal reveal-d1">From intimate birthday glam sessions to breathtaking bridal transformations, each appointment is a curated experience. Sam brings not just skill and professionalism, but warmth and genuine care to every client he works with.</p>
 
         <div class="about-perks">
           <div class="about-perk reveal reveal-d2">
@@ -1879,7 +1872,7 @@ footer {
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
         </div>
-        <p class="review-text">Sam did my wedding makeup and I genuinely cried happy tears when I looked in the mirror. She understood my vision perfectly and the look lasted the entire day without a touch-up. Absolute queen.</p>
+        <p class="review-text">Sam did my wedding makeup and I genuinely cried happy tears when I looked in the mirror. He understood my vision perfectly and the look lasted the entire day without a touch-up. Absolute legend.</p>
         <div class="review-author">
           <div class="review-avatar">A</div>
           <div>
@@ -1896,7 +1889,7 @@ footer {
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
         </div>
-        <p class="review-text">I booked Sam for my 30th birthday and the glam was unreal. Everyone was asking who did my makeup all night. She made me feel so comfortable and confident. I'll never use anyone else!</p>
+        <p class="review-text">I booked Sam for my 30th birthday and the glam was unreal. Everyone was asking who did my makeup all night. He made me feel so comfortable and confident. I'll never use anyone else!</p>
         <div class="review-author">
           <div class="review-avatar">T</div>
           <div>
@@ -1913,7 +1906,7 @@ footer {
           <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
         </div>
-        <p class="review-text">The photoshoot makeup Sam created was absolutely stunning — she knew exactly how it would translate on camera. Professional, creative, and so easy to work with. Highly recommend to every model and creative.</p>
+        <p class="review-text">The photoshoot makeup Sam created was absolutely stunning — he knew exactly how it would translate on camera. Professional, creative, and so easy to work with. Highly recommend to every model and creative.</p>
         <div class="review-author">
           <div class="review-avatar">C</div>
           <div>
