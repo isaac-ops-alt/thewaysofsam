@@ -377,11 +377,6 @@ h4 { font-size: 20px; }
   object-fit: cover;
   z-index: 0;
   will-change: transform;
-  opacity: 0;
-  transition: opacity 0.9s ease;
-}
-.hero-video.playing {
-  opacity: 1;
 }
 .hero-video-overlay {
   position: absolute;
@@ -1409,8 +1404,7 @@ footer {
   to   { background-position: 28px 28px; }
 }
 
-/* Hero video parallax ready */
-.hero-video { transition: none; }
+/* Hero video parallax ready — no transition override needed */
 
 /* Animated marquee strip text shimmer */
 .marquee-track span { transition: color .3s; }
@@ -2477,42 +2471,16 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   })();
 })();
 
-// ── HERO VIDEO AUTOPLAY + FADE-IN ────────────────────────────
+// ── HERO VIDEO AUTOPLAY (iOS Safari safe) ────────────────────
 (function() {
   const vid = document.querySelector('.hero-video');
   if (!vid) return;
-
-  // iOS Safari bug: muted HTML attribute is ignored — must set via JS
-  vid.muted = true;
-  vid.setAttribute('muted', '');
-  vid.setAttribute('playsinline', '');
-  vid.setAttribute('webkit-playsinline', '');
-
-  let shown = false;
-  const show = () => {
-    if (shown) return;
-    shown = true;
-    vid.classList.add('playing');
-  };
-
-  const tryPlay = () => {
-    vid.muted = true; // re-assert before every play attempt
-    const p = vid.play();
-    if (p !== undefined) p.then(show).catch(() => {
-      // If autoplay still blocked, show the dark background gracefully
-      show();
-    });
-  };
-
-  vid.addEventListener('loadedmetadata', tryPlay, { once: true });
-  vid.addEventListener('canplay',        () => { tryPlay(); show(); }, { once: true });
-  vid.addEventListener('playing',        show, { once: true });
-
-  // Hard fallback for very slow connections
-  setTimeout(() => { tryPlay(); show(); }, 3000);
-
-  // Already buffered (cached visit)
-  if (vid.readyState >= 1) tryPlay();
+  // iOS Safari requires muted set as a JS property, not just HTML attribute
+  vid.muted    = true;
+  vid.loop     = true;
+  vid.playsInline = true;
+  vid.load();
+  vid.play().catch(() => {});
 })();
 
 // ── HERO VIDEO PARALLAX ──────────────────────────────────────
