@@ -1517,9 +1517,14 @@ footer {
 <section id="hero" aria-label="Hero section">
 
   <!-- Fullscreen background video -->
-  <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
+  <video class="hero-video" id="heroVideo" autoplay muted loop playsinline webkit-playsinline preload="auto">
     <source src="img/background%20video.mp4" type="video/mp4">
   </video>
+  <script>
+    // Inline — runs immediately in page-load context (the only window iOS Safari allows autoplay)
+    var _hv = document.getElementById('heroVideo');
+    if (_hv) { _hv.muted = true; _hv.play(); }
+  </script>
   <div class="hero-video-overlay" aria-hidden="true"></div>
 
   <div class="hero-content">
@@ -2473,14 +2478,24 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
 // ── HERO VIDEO AUTOPLAY (iOS Safari safe) ────────────────────
 (function() {
-  const vid = document.querySelector('.hero-video');
+  const vid = document.getElementById('heroVideo');
   if (!vid) return;
-  // iOS Safari requires muted set as a JS property, not just HTML attribute
-  vid.muted    = true;
-  vid.loop     = true;
-  vid.playsInline = true;
-  vid.load();
-  vid.play().catch(() => {});
+
+  const tryPlay = () => {
+    vid.muted = true;
+    vid.play().catch(() => {});
+  };
+
+  tryPlay();
+
+  // Fallback: first touch on page (covers iOS Low Power Mode delay)
+  document.addEventListener('touchstart', function iosTouch() {
+    if (vid.paused) tryPlay();
+    document.removeEventListener('touchstart', iosTouch);
+  }, { once: true, passive: true });
+
+  // Fallback: back-forward navigation (iOS restores page from cache paused)
+  window.addEventListener('pageshow', () => { if (vid.paused) tryPlay(); });
 })();
 
 // ── HERO VIDEO PARALLAX ──────────────────────────────────────
